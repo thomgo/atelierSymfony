@@ -4,23 +4,37 @@
   <header class="jumbotron jumbotron-fluid bg-dark text-white mb-0">
     <section class="container">
       <h1 class="display-4">Forum Ada Lovelace</h1>
-      <p class="lead">Parlez de tout est n'importe quoi</p>
+      <p class="lead">Parlez de tout et n'importe quoi</p>
+      {% if app.user %}
+        <p>Bonjour {{app.user.username}}</p>
+      {% endif %}
     </section>
   </header>
-  <ul class="nav mt-0 bg-danger">
+  <ul class="nav mt-0 bg-danger py-1">
     <li class="nav-item">
       <a class="nav-link text-white" href="{{ path("index") }}">Accueil</a>
     </li>
     <li class="nav-item">
       <a class="nav-link text-white" href="{{ path("rules") }}">Règles</a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link text-white" href="{{ path("new_subject") }}">Nouveau sujet</a>
+    </li>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a href="{{path('app_logout')}}" class="btn btn-dark">Deconnexion</a>
+    {% else %}
+      <li class="nav-item">
+        <a class="nav-link text-white" href="{{ path("app_register") }}">S'inscrire</a>
+      </li>
+      <a href="{{path('app_login')}}" class="btn btn-dark">Connexion</a>
+    {% endif %}
   </ul>
 
   <main class="container my-5">
     {% block main %}{% endblock %}
   </main>
 
-  <footer class="jumbotron jumbotron-fluid bg-dark text-white">
+  <footer class="jumbotron jumbotron-fluid bg-dark text-white mb-0">
     <section class="container">
       <p class="lead">Tous droits réservés</p>
     </section>
