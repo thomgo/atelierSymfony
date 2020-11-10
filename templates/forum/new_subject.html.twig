@@ -4,11 +4,13 @@
 
 {% block main %}
   <h2>Posez votre question</h2>
+  <!-- On affiche les éventuelles erreurs de validation dans le formulaire -->
   {% for error in errors %}
     <div class="alert-danger">
       {{ error.message }}
     </div>
   {% endfor %}
+  <!-- Affichage du formulaire dans sa version la plus simple -->
   {{ form(form) }}
 
 {% endblock %}

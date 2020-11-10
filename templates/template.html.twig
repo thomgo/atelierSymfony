@@ -1,10 +1,12 @@
+<!-- Fichier qui hérite de la base -->
 {% extends "base.html.twig" %}
-
+<!-- On ouvre le bloc body du parent pour écrire notre template dedans -->
 {% block body %}
   <header class="jumbotron jumbotron-fluid bg-dark text-white mb-0">
     <section class="container">
       <h1 class="display-4">Forum Ada Lovelace</h1>
       <p class="lead">Parlez de tout et n'importe quoi</p>
+      <!-- Si un utilisateur est connecté on affiche son nom -->
       {% if app.user %}
         <p>Bonjour {{app.user.username}}</p>
       {% endif %}
@@ -20,6 +22,7 @@
     <li class="nav-item">
       <a class="nav-link text-white" href="{{ path("new_subject") }}">Nouveau sujet</a>
     </li>
+    <!-- Si un utilisateur est connecté avec le rôle de base -->
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <a href="{{path('app_logout')}}" class="btn btn-dark">Deconnexion</a>
     {% else %}
@@ -31,6 +34,7 @@
   </ul>
 
   <main class="container my-5">
+    <!-- On crée un bloc main dans lequel on viendra écrire le cotnenu de nos pages -->
     {% block main %}{% endblock %}
   </main>
 
@@ -39,4 +43,5 @@
       <p class="lead">Tous droits réservés</p>
     </section>
   </footer>
+<!-- On n'oublie pas de refermer le block body -->
 {% endblock %}

@@ -15,8 +15,10 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
+    // Méthode qui gére l'enregistrement d'un nouvel utilisateur après soumission du formulaire
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
+        // Vous retrouvez ici un code classique de traitement de formulaire puis enregistrement en BDD 
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
