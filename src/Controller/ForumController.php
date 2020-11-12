@@ -8,7 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Subject;
+use App\Entity\Answer;
 use App\Form\SubjectType;
+use App\Form\AnswerType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
@@ -33,6 +35,15 @@ class ForumController extends AbstractController
     }
 
     /**
+     * @Route("/user/subjects", name="user_subjects")
+     */
+    public function user_subjects(): Response
+    {
+        // On retourne une vue sous forme de réponse et on lui passe une variables subjects à laquelle on associe $subjects
+        return $this->render('forum/user_subjects.html.twig');
+    }
+
+    /**
      * @Route("/rules", name="rules")
      */
     public function rules(): Response
@@ -47,14 +58,29 @@ class ForumController extends AbstractController
      */
     // Méthode pour afficher un sujet. Elle attend un paramètre id car la route attend un paramètre
     // On précise dans la route et la méthode que ce paramètre est un integer
-    public function subject(int $id): Response
+    public function subject(int $id, Request $request): Response
     {
         $subjectRepository = $this->getDoctrine()->getRepository(Subject::class);
         // On fait appelle à la méthode find du repo qui recherche une entité par sa clef primaire
         $subject = $subjectRepository->find($id);
+
+        $answer = new Answer();
+        $form = $this->createForm(AnswerType::class, $answer);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+          // Associe l'utilisateur connecté  à la réponse
+          $answer->setUser($this->getUser());
+          // Associe la réponse au sujet
+          $answer->setSubject($subject);
+          $answer->setAnswerDate(new \DateTime());
+          $entityManager = $this->getDoctrine()->getManager();
+          $entityManager->persist($answer);
+          $entityManager->flush();
+        }
         // On passe l'entité récupérée à la vue
         return $this->render('forum/subject.html.twig', [
             'subject' => $subject,
+            'form' => $form->createView()
         ]);
     }
 
@@ -73,6 +99,8 @@ class ForumController extends AbstractController
         $form->handleRequest($request);
         // Si on a soumis un formulaire et que tout est OK
         if ($form->isSubmitted() && $form->isValid()) {
+          // On associe le sujet à l'utilisateur connecté
+          $subject->setUser($this->getUser());
           // On vérifie la présence d'erreur dans l'objet sur la base des règles définies par le  validateur dans l'entité
           $errors = $validator->validate($subject);
           // Si le tableau ne contient pas d'erreurs

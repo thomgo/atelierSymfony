@@ -8,4 +8,21 @@
     <p>{{ subject.content }}</p>
   </div>
 
+  <h3>Réponses au sujet</h3>
+  {% if subject.answers is not empty %}
+    {% for answer in subject.answers %}
+      <div class="card my-3">
+        <div class="card-header">
+          De {{answer.user.username}} le {{answer.answerDate|date("d/m/Y H:i")}}
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{answer.content}}</p>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>Pas encore de réponses pour le moment</p>
+  {% endif %}
+  <h3>Répondre au sujet</h3>
+  {{form(form)}}
 {% endblock %}
