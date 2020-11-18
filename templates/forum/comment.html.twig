@@ -1,0 +1,16 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Commentaire{% endblock %}
+
+{% block main %}
+  <h2>Commenter une réponse</h2>
+  <div class="row">
+    <div class="col col-md-6">
+      {{form(form)}}
+    </div>
+    <div class="col col-md-6">
+      <p class="bg-muted">{{answer.content}}</p>
+    </div>
+  </div>
+
+{% endblock %}

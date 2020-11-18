@@ -9,8 +9,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Subject;
 use App\Entity\Answer;
+use App\Entity\Comment;
 use App\Form\SubjectType;
 use App\Form\AnswerType;
+use App\Form\CommentType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
@@ -121,6 +123,29 @@ class ForumController extends AbstractController
         return $this->render('forum/new_subject.html.twig', [
             'form' => $form->createView(),
             'errors' => $errors,
+        ]);
+    }
+
+    /**
+     * @Route("/comment/{id}", name="comment")
+     */
+    public function comment(int $id, Request $request): Response
+    {
+        $answerRepository = $this->getDoctrine()->getRepository(Answer::class);
+        $answer = $answerRepository->find($id);
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+          $comment->setAnswer($answer);
+          $entityManager = $this->getDoctrine()->getManager();
+          $entityManager->persist($comment);
+          $entityManager->flush();
+          return $this->redirectToRoute("subject", ["id" => $answer->getSubject()->getId()]);
+        }
+        return $this->render('forum/comment.html.twig', [
+            'answer' => $answer,
+            'form' => $form->createView()
         ]);
     }
 }

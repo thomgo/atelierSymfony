@@ -18,6 +18,10 @@
         <div class="card-body">
           <p class="card-text">{{answer.content}}</p>
         </div>
+        {% for comment in answer.comments %}
+          <p class="p-2 bg-light">{{comment.comment}}</p>
+        {% endfor %}
+        <a class="btn btn-danger" href="{{path("comment", {id:answer.id})}}">Laisser un commentaire</a>
       </div>
     {% endfor %}
   {% else %}
