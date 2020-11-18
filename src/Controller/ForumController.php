@@ -64,7 +64,7 @@ class ForumController extends AbstractController
     {
         $subjectRepository = $this->getDoctrine()->getRepository(Subject::class);
         // On fait appelle à la méthode find du repo qui recherche une entité par sa clef primaire
-        $subject = $subjectRepository->find($id);
+        $subject = $subjectRepository->findOneSubject($id);
 
         $answer = new Answer();
         $form = $this->createForm(AnswerType::class, $answer);

@@ -36,11 +36,15 @@ class SubjectRepository extends ServiceEntityRepository
     }
     */
 
-    public function findOneBySomeField($value): ?Subject
+    public function findOneSubject(int $id): ?Subject
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+            ->leftJoin("s.answers", "a")
+            ->addSelect("a")
+            ->leftJoin("a.comments", "c")
+            ->addSelect("c")
+            ->where('s.id = :id')
+            ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
