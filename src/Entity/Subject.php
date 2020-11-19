@@ -128,4 +128,12 @@ class Subject
 
         return $this;
     }
+
+    // méthode d'exemple rajoutée uniquement pour l'atelier sur les test unitaires
+    public function makeUpper($text) {
+      if(gettype($text) !== "string") {
+        return false;
+      }
+      return "#" . strtoupper($text) . "#";
+    }
 }
